@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0);
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+}
+
+.container {
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  max-width: 600px;
+}
+
+.category {
+  margin-bottom: 20px;
+}
+
+.category h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid white;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.4s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item.updated {
+  animation: highlight 0.6s ease-in-out;
+}
+
+@keyframes highlight {
+  0% { background-color: rgba(255,255,0,0.3); }
+  100% { background-color: transparent; }
+}
+
+
+.item img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.item span {
+  font-size: 16px;
+}
