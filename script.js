@@ -10,9 +10,7 @@ const CATEGORY_NAMES = {
 
 async function fetchData() {
   try {
-    const proxy = "https://corsproxy.io/?" +
-      encodeURIComponent("https://api.joshlei.com/v1/growagarden/stock");
-    const res = await fetch(proxy);
+    const res = await fetch("/api/stock");
     const data = await res.json();
 
     renderOverlay(data);
