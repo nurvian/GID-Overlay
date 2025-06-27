@@ -1,13 +1,13 @@
+let previousData = {};
+
 async function fetchData() {
   try {
-    const res = await fetch("https://api.joshlei.com/v1/growagarden/stock");
+    const proxy = "https://corsproxy.io/?";
+    const url = "https://api.joshlei.com/v1/growagarden/stock";
+    const res = await fetch(proxy + encodeURIComponent(url));
     const data = await res.json();
 
-    const categories = {
-      stock: [],
-      gear: [],
-      egg: []
-    };
+    const categories = { stock: [], gear: [], egg: [] };
 
     for (const item of data) {
       if (item.item_id.startsWith("seed")) {
@@ -25,8 +25,6 @@ async function fetchData() {
     document.getElementById("overlay").innerHTML = "Failed to load data.";
   }
 }
-
-let previousData = {};
 
 function renderOverlay(categories) {
   const container = document.getElementById("overlay");
@@ -62,7 +60,7 @@ function renderOverlay(categories) {
       itemDiv.appendChild(img);
       itemDiv.appendChild(name);
 
-      // 🔁 Cek apakah jumlahnya berubah
+      // Cek perubahan jumlah
       const prevAmount = previousData[item.item_id];
       if (prevAmount !== undefined && prevAmount !== item.amount) {
         itemDiv.classList.add("updated");
@@ -77,4 +75,4 @@ function renderOverlay(categories) {
 }
 
 fetchData();
-setInterval(fetchData, 10000); // update every 10s
+setInterval(fetchData, 30000); // update tiap 30 detik
