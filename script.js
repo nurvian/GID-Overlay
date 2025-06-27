@@ -12,20 +12,24 @@ async function fetchData() {
   try {
     const res = await fetch("/api/stock");
     const data = await res.json();
-
+    console.log("✅ Data fetched:", data);
     renderOverlay(data);
   } catch (err) {
-    console.error("Failed to load overlay:", err);
+    console.error("❌ Failed to load overlay:", err);
     document.getElementById("overlay").innerHTML = "❌ Failed to load data.";
   }
 }
 
 function renderOverlay(data) {
   const container = document.getElementById("overlay");
+  if (!container) {
+    console.warn("❗ #overlay not found in DOM!");
+    return;
+  }
+
   container.innerHTML = "";
 
   for (const [key, items] of Object.entries(data)) {
-    // Lewatkan non-stock array
     if (!key.endsWith("_stock") || !Array.isArray(items)) continue;
 
     const categoryDiv = document.createElement("div");
@@ -62,5 +66,7 @@ function renderOverlay(data) {
   }
 }
 
-fetchData();
-setInterval(fetchData, 30000); // update every 30 sec
+document.addEventListener("DOMContentLoaded", () => {
+  fetchData();
+  setInterval(fetchData, 30000);
+});
