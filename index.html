@@ -6,22 +6,31 @@
   <style>
     body {
       margin: 0;
-      padding: 20px;
+      padding: 0;
       font-family: sans-serif;
-      background: #0f0f0f;
+      background: transparent; /* INI WAJIB untuk transparan */
       color: #fff;
+    }
+    html {
+      background: transparent; /* juga penting */
+    }
+    html, body {
+      background: transparent !important;
     }
     #overlay {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
+      padding: 10px;
     }
     .category {
-      border: 1px solid #444;
-      border-radius: 10px;
+      background: rgba(20, 20, 20, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
       padding: 10px;
-      background: #1a1a1a;
       min-width: 250px;
+      max-width: 300px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
     }
     .category h2 {
       margin-top: 0;
@@ -37,6 +46,7 @@
     .item img {
       width: 32px;
       height: 32px;
+      border-radius: 4px;
     }
     .updated {
       background: limegreen;
