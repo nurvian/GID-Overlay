@@ -1,50 +1,41 @@
 let previousData = {};
 
+const CATEGORY_NAMES = {
+  seed_stock: "🌱 Seeds",
+  gear_stock: "⚙️ Gears",
+  egg_stock: "🥚 Eggs",
+  cosmetic_stock: "🎨 Cosmetics",
+  eventshop_stock: "🎁 Event Shop"
+};
+
 async function fetchData() {
   try {
-    const proxy = "https://corsproxy.io/?";
-    const url = "https://api.joshlei.com/v1/growagarden/stock";
-    const res = await fetch(proxy + encodeURIComponent(url));
+    const proxy = "https://corsproxy.io/?" +
+      encodeURIComponent("https://api.joshlei.com/v1/growagarden/stock");
+    const res = await fetch(proxy);
     const data = await res.json();
 
-    const categories = { stock: [], gear: [], egg: [] };
-
-    for (const item of data) {
-      if (item.item_id.startsWith("seed")) {
-        categories.stock.push(item);
-      } else if (item.item_id.startsWith("gear")) {
-        categories.gear.push(item);
-      } else if (item.item_id.startsWith("egg")) {
-        categories.egg.push(item);
-      }
-    }
-
-    renderOverlay(categories);
+    renderOverlay(data);
   } catch (err) {
     console.error("Failed to load overlay:", err);
-    document.getElementById("overlay").innerHTML = "Failed to load data.";
+    document.getElementById("overlay").innerHTML = "❌ Failed to load data.";
   }
 }
 
-function renderOverlay(categories) {
+function renderOverlay(data) {
   const container = document.getElementById("overlay");
   container.innerHTML = "";
 
-  const catNames = {
-    stock: "🥦 Stock Items",
-    gear: "⚙️ Gear Items",
-    egg: "🥚 Egg Items"
-  };
+  for (const [key, items] of Object.entries(data)) {
+    // Lewatkan non-stock array
+    if (!key.endsWith("_stock") || !Array.isArray(items)) continue;
 
-  for (const [catKey, items] of Object.entries(categories)) {
-    if (items.length === 0) continue;
-
-    const catDiv = document.createElement("div");
-    catDiv.className = "category";
+    const categoryDiv = document.createElement("div");
+    categoryDiv.className = "category";
 
     const title = document.createElement("h2");
-    title.textContent = catNames[catKey];
-    catDiv.appendChild(title);
+    title.textContent = CATEGORY_NAMES[key] || key;
+    categoryDiv.appendChild(title);
 
     for (const item of items) {
       const itemDiv = document.createElement("div");
@@ -52,27 +43,26 @@ function renderOverlay(categories) {
 
       const img = document.createElement("img");
       img.src = item.icon;
-      img.alt = "";
+      img.alt = item.item_id;
 
       const name = document.createElement("span");
-      name.textContent = `${item.display_name} ×${item.amount}`;
+      name.textContent = `${item.display_name} ×${item.quantity}`;
 
       itemDiv.appendChild(img);
       itemDiv.appendChild(name);
 
-      // Cek perubahan jumlah
-      const prevAmount = previousData[item.item_id];
-      if (prevAmount !== undefined && prevAmount !== item.amount) {
+      const prev = previousData[item.item_id];
+      if (prev !== undefined && prev !== item.quantity) {
         itemDiv.classList.add("updated");
       }
 
-      previousData[item.item_id] = item.amount;
-      catDiv.appendChild(itemDiv);
+      previousData[item.item_id] = item.quantity;
+      categoryDiv.appendChild(itemDiv);
     }
 
-    container.appendChild(catDiv);
+    container.appendChild(categoryDiv);
   }
 }
 
 fetchData();
-setInterval(fetchData, 30000); // update tiap 30 detik
+setInterval(fetchData, 30000); // update every 30 sec
