@@ -3,11 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <title>Grow a Garden Overlay</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+    }
+    #overlay {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .category {
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 10px;
+      background: #1a1a1a;
+      min-width: 250px;
+    }
+    .category h2 {
+      margin-top: 0;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .item img {
+      width: 32px;
+      height: 32px;
+    }
+    .updated {
+      background: limegreen;
+      color: black;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
-  <div id="overlay"></div>
+  <div id="overlay">⏳ Loading...</div>
 
-  <script src="script.js"></script>
+  <script>
+    let previousData = {};
+
+    const CATEGORY_NAMES = {
+      seed_stock: "🌱 Seeds",
+      gear_stock: "⚙️ Gears",
+      egg_stock: "🥚 Eggs",
+      cosmetic_stock: "🎨 Cosmetics",
+      eventshop_stock: "🎁 Event Shop"
+    };
+
+    async function fetchData() {
+      try {
+        const res = await fetch("/api/stock");
+        const data = await res.json();
+        console.log("✅ Data fetched:", data);
+        renderOverlay(data);
+      } catch (err) {
+        console.error("❌ Failed to load overlay:", err);
+        document.getElementById("overlay").innerHTML = "❌ Failed to load data.";
+      }
+    }
+
+    function renderOverlay(data) {
+      const container = document.getElementById("overlay");
+      container.innerHTML = "";
+
+      for (const [key, items] of Object.entries(data)) {
+        if (!key.endsWith("_stock") || !Array.isArray(items)) continue;
+
+        const categoryDiv = document.createElement("div");
+        categoryDiv.className = "category";
+
+        const title = document.createElement("h2");
+        title.textContent = CATEGORY_NAMES[key] || key;
+        categoryDiv.appendChild(title);
+
+        for (const item of items) {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "item";
+
+          const img = document.createElement("img");
+          img.src = item.icon;
+          img.alt = item.item_id;
+
+          const name = document.createElement("span");
+          name.textContent = `${item.display_name} ×${item.quantity}`;
+
+          itemDiv.appendChild(img);
+          itemDiv.appendChild(name);
+
+          if (previousData[item.item_id] !== undefined &&
+              previousData[item.item_id] !== item.quantity) {
+            itemDiv.classList.add("updated");
+          }
+
+          previousData[item.item_id] = item.quantity;
+          categoryDiv.appendChild(itemDiv);
+        }
+
+        container.appendChild(categoryDiv);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchData();
+      setInterval(fetchData, 30000);
+    });
+  </script>
 </body>
 </html>
