@@ -5,20 +5,30 @@ body {
   color: white;
 }
 
+#overlay {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
 .container {
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 12px;
-  max-width: 600px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
 }
 
+/* Setiap kategori */
 .category {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .category h2 {
   font-size: 20px;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
+  padding-bottom: 5px;
   border-bottom: 1px solid white;
 }
 
@@ -47,7 +57,6 @@ body {
   100% { background-color: transparent; }
 }
 
-
 .item img {
   width: 24px;
   height: 24px;
@@ -56,4 +65,12 @@ body {
 
 .item span {
   font-size: 16px;
+}
+
+/* Gambar separator antar kategori */
+.separator {
+  width: 100%;
+  height: auto;
+  margin: 12px 0;
+  opacity: 0.5;
 }
