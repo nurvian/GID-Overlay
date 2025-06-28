@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   try {
-    const response = await fetch("https://api.joshlei.com/v1/growagarden/stock", {
+    const response = await fetch("https://api.joshlei.com/v2/growagarden/stock", {
       headers: {
         "User-Agent": "Mozilla/5.0 (compatible; VercelBot/1.0)", // Tambahan penting
         "Accept": "application/json"
