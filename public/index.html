@@ -10,12 +10,17 @@
       font-family: sans-serif;
       background: transparent !important;
       color: #fff;
-      text-align: center;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden; /* ⛔ mencegah scroll */
     }
     #overlay {
-      padding: 20px;
       display: flex;
       justify-content: center;
+      align-items: center;
+      height: 100vh; /* isi penuh tinggi layar */
+      width: 100vw;
+      padding: 0;
     }
     .header {
       margin-top: 20px;
