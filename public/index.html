@@ -5,6 +5,24 @@
   <meta charset="UTF-8">
   <title>GID Overlay</title>
   <style>
+    @keyframes hu__hu__ {
+      0%   { transform: scale(1) rotate(0deg); }
+      25%  { transform: scale(1.05) rotate(-1deg); }
+      50%  { transform: scale(1.1) rotate(1deg); }
+      75%  { transform: scale(1.05) rotate(-1deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .cssanimation.hu__hu__ {
+      animation: hu__hu__ 1.5s infinite ease-in-out;
+      background: linear-gradient(to right, #5865f2, #404eed);
+      padding: 3px 6px;
+      border-radius: 6px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 0 8px rgba(88,101,242,0.6);
+    }
+
     .item.animate__animated {
       --animate-duration: 0.6s;
     }
@@ -104,6 +122,14 @@
   </div>
 
   <script>
+    const specialItems = [
+      "master_sprinkler",
+      "bug_egg",
+      "paradise_egg",
+      "sugar_apple",
+      "feijoa"
+    ];
+
     const CATEGORY_NAMES = {
       seed_stock: "🌱 Seeds",
       gear_stock: "⚙️ Gears",
@@ -167,9 +193,16 @@
             itemDiv.classList.remove("animate__animated", "animate__bounceInLeft");
           }, 800);
         }
-        
           previousData[item.item_id] = item.quantity;
-          categoryDiv.appendChild(itemDiv);
+
+          if (specialItems.includes(item.item_id)) {
+            const animatedDiv = document.createElement("div");
+            animatedDiv.className = "cssanimation hu__hu__";
+            animatedDiv.appendChild(itemDiv);
+            categoryDiv.appendChild(animatedDiv);
+          } else {
+            categoryDiv.appendChild(itemDiv);
+          }
         }
 
         container.appendChild(categoryDiv);
