@@ -4,73 +4,76 @@
   <meta charset="UTF-8">
   <title>Grow a Garden Overlay</title>
   <style>
-    html, body {
+    body, html {
       margin: 0;
       padding: 0;
       font-family: sans-serif;
       background: transparent !important;
       color: #fff;
+      text-align: center;
     }
-
     #overlay {
+      padding: 20px;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
-      min-height: 100vh;
     }
-
+    .title {
+      font-size: 2em;
+      font-weight: bold;
+      margin-top: 20px;
+      text-shadow: 0 0 5px #000;
+    }
+    .subtitle {
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      color: #aaa;
+    }
     .wrapper {
-      background: rgba(20, 20, 20, 0.7);
+      background: rgba(20, 20, 20, 0.75);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 16px;
-      max-width: 480px;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+      max-width: 800px;
       width: 100%;
-      box-shadow: 0 0 20px rgba(255,255,255,0.05);
     }
-
     .category {
       padding: 10px 0;
     }
-
     .category h2 {
-      margin: 0 0 6px;
-      font-size: 1.1em;
-      border-bottom: 1px solid #555;
+      margin: 0;
+      font-size: 1.2em;
+      border-bottom: 1px solid #444;
       padding-bottom: 4px;
     }
-
     .item {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin: 4px 0;
+      margin: 6px 0;
     }
-
     .item img {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border-radius: 4px;
     }
-
     .updated {
       background: limegreen;
       color: black;
       padding: 2px 4px;
       border-radius: 4px;
     }
-
     .separator {
       width: 100%;
-      height: 8px;
-      object-fit: contain;
-      margin: 8px 0;
-      opacity: 0.6;
+      height: auto;
+      margin: 10px 0;
+      opacity: 0.5;
     }
   </style>
 </head>
 <body>
+  <div class="title">GID Overlay</div>
+  <div class="subtitle">Powered by JStudio</div>
   <div id="overlay">⏳ Loading...</div>
 
   <script>
@@ -129,8 +132,10 @@
           itemDiv.appendChild(img);
           itemDiv.appendChild(name);
 
-          if (previousData[item.item_id] !== undefined &&
-              previousData[item.item_id] !== item.quantity) {
+          if (
+            previousData[item.item_id] !== undefined &&
+            previousData[item.item_id] !== item.quantity
+          ) {
             itemDiv.classList.add("updated");
           }
 
@@ -140,10 +145,11 @@
 
         wrapper.appendChild(categoryDiv);
 
+        // Tambahkan separator antar kategori kecuali terakhir
         if (index < entries.length - 1) {
           const separator = document.createElement("img");
           separator.className = "separator";
-          separator.src = "/strip.png"; // gunakan file lokal, upload ke public/
+          separator.src = "/strip.png"; // pastikan file ini ada di public/
           wrapper.appendChild(separator);
         }
       });
