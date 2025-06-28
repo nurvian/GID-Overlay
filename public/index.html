@@ -2,103 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Grow a Garden Overlay</title>
+  <title>GID Overlay</title>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
-      font-family: sans-serif;
-      background: transparent !important;
-      color: #fff;
       width: 100vw;
       height: 100vh;
-      overflow: hidden; /* ⛔ mencegah scroll */
+      overflow: hidden;
+      background: transparent !important;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
     }
+
     #overlay {
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100%; /* isi penuh tinggi layar */
-      width: 100%;
-      padding: 0;
     }
-    .header {
-      margin-top: 20px;
-      margin-bottom: 10px;
-    }
-    .header img {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 10px;
-    }
-    .title {
-      font-size: 2em;
-      font-weight: bold;
-      text-shadow: 0 0 5px #000;
-    }
-    .subtitle {
-      font-size: 0.9em;
-      margin-bottom: 10px;
-      color: #aaa;
-    }
+
     .wrapper {
-      background: rgba(20, 20, 20, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-      max-width: 420px;
-      width: 100%;
-      box-sizing: border-box;
-      max-height: 90vh; /* biar gak terlalu tinggi */
-      overflow-y: auto;  /* scroll dalam box kalau terlalu panjang */
+      background: rgba(20, 20, 20, 0.7);
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+      max-width: 480px;
+      width: 95%;
+      font-size: 12px;
     }
-    .category {
-      padding: 10px 0;
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
     }
-    .category h2 {
+
+    .header img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .header h1 {
       margin: 0;
-      font-size: 1.2em;
-      border-bottom: 1px solid #444;
-      padding-bottom: 4px;
+      font-size: 16px;
     }
+
+    .category {
+      margin-bottom: 8px;
+    }
+
+    .category h2 {
+      font-size: 13px;
+      margin: 6px 0;
+      border-bottom: 1px solid #444;
+      padding-bottom: 2px;
+    }
+
     .item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 6px 0;
+      gap: 6px;
+      margin: 3px 0;
     }
+
     .item img {
-      width: 32px;
-      height: 32px;
-      border-radius: 4px;
+      width: 20px;
+      height: 20px;
     }
-    .updated {
-      background: limegreen;
-      color: black;
-      padding: 2px 4px;
-      border-radius: 4px;
+
+    .item span {
+      font-size: 12px;
     }
-    .separator {
-      width: 100%;
-      height: 4px;
-      margin: 10px 0;
+
+    .powered {
+      text-align: center;
+      font-size: 10px;
+      margin-top: 6px;
       opacity: 0.5;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <img src="/logo.gif" alt="Logo" />
-    <div class="title">GID Overlay</div>
-    <div class="subtitle">Powered by JStudio</div>
+  <div id="overlay">
+    <div class="wrapper">
+      <div class="header">
+        <img src="/logo.gif" alt="Logo" />
+        <h1>GID Overlay</h1>
+      </div>
+      <div id="content">⏳ Loading...</div>
+      <div class="powered">powered by JStudio</div>
+    </div>
   </div>
 
-  <div id="overlay">⏳ Loading...</div>
-
   <script>
-    let previousData = {};
-
     const CATEGORY_NAMES = {
       seed_stock: "🌱 Seeds",
       gear_stock: "⚙️ Gears",
@@ -107,30 +107,25 @@
       eventshop_stock: "🎁 Event Shop"
     };
 
+    let previousData = {};
+
     async function fetchData() {
       try {
         const res = await fetch("/api/stock");
         const data = await res.json();
-        console.log("✅ Data fetched:", data);
-        renderOverlay(data);
-      } catch (err) {
-        console.error("❌ Failed to load overlay:", err);
-        document.getElementById("overlay").innerHTML = "❌ Failed to load data.";
+        render(data);
+      } catch (e) {
+        document.getElementById("content").textContent = "❌ Failed to load data.";
       }
     }
 
-    function renderOverlay(data) {
-      const container = document.getElementById("overlay");
+    function render(data) {
+      const container = document.getElementById("content");
       container.innerHTML = "";
 
-      const wrapper = document.createElement("div");
-      wrapper.className = "wrapper";
+      for (const [key, items] of Object.entries(data)) {
+        if (!key.endsWith("_stock") || !Array.isArray(items)) continue;
 
-      const entries = Object.entries(data).filter(([key, val]) =>
-        key.endsWith("_stock") && Array.isArray(val)
-      );
-
-      entries.forEach(([key, items], index) => {
         const categoryDiv = document.createElement("div");
         categoryDiv.className = "category";
 
@@ -146,34 +141,26 @@
           img.src = item.icon;
           img.alt = item.item_id;
 
-          const name = document.createElement("span");
-          name.textContent = `${item.display_name} ×${item.quantity}`;
+          const span = document.createElement("span");
+          span.textContent = `${item.display_name} ×${item.quantity}`;
 
           itemDiv.appendChild(img);
-          itemDiv.appendChild(name);
+          itemDiv.appendChild(span);
 
-          if (
-            previousData[item.item_id] !== undefined &&
-            previousData[item.item_id] !== item.quantity
-          ) {
-            itemDiv.classList.add("updated");
+          if (previousData[item.item_id] !== undefined &&
+              previousData[item.item_id] !== item.quantity) {
+            itemDiv.style.backgroundColor = "limegreen";
+            itemDiv.style.color = "black";
+            itemDiv.style.borderRadius = "3px";
+            itemDiv.style.padding = "1px 3px";
           }
 
           previousData[item.item_id] = item.quantity;
           categoryDiv.appendChild(itemDiv);
         }
 
-        wrapper.appendChild(categoryDiv);
-
-        if (index < entries.length - 1) {
-          const separator = document.createElement("img");
-          separator.className = "separator";
-          separator.src = "/strip.png";
-          wrapper.appendChild(separator);
-        }
-      });
-
-      container.appendChild(wrapper);
+        container.appendChild(categoryDiv);
+      }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
