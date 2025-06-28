@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <meta charset="UTF-8">
   <title>GID Overlay</title>
   <style>
+    .item.animate__animated {
+      --animate-duration: 0.6s;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -148,13 +153,21 @@
           itemDiv.appendChild(span);
 
           if (previousData[item.item_id] !== undefined &&
-              previousData[item.item_id] !== item.quantity) {
-            itemDiv.style.backgroundColor = "limegreen";
-            itemDiv.style.color = "black";
-            itemDiv.style.borderRadius = "3px";
-            itemDiv.style.padding = "1px 3px";
-          }
+            previousData[item.item_id] !== item.quantity) {
+          itemDiv.classList.add("animate__animated", "animate__bounceInLeft");
 
+          // Optional styling tambahan
+          itemDiv.style.backgroundColor = "limegreen";
+          itemDiv.style.color = "black";
+          itemDiv.style.borderRadius = "3px";
+          itemDiv.style.padding = "1px 3px";
+
+          // Remove animation class setelah selesai agar bisa retrigger
+          setTimeout(() => {
+            itemDiv.classList.remove("animate__animated", "animate__bounceInLeft");
+          }, 800);
+        }
+        
           previousData[item.item_id] = item.quantity;
           categoryDiv.appendChild(itemDiv);
         }
