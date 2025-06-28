@@ -148,6 +148,7 @@
     };
 
     let previousData = {};
+    let latestEndTimes = {}; // <--- Tambahan
 
     async function fetchData() {
       try {
@@ -183,8 +184,11 @@
 
             const refreshText = document.createElement("div");
             refreshText.className = "refresh-timer";
+            refreshText.id = `timer-${key}`; // <--- Tambah ID unik
             refreshText.textContent = `⏱️ Next update in: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             categoryDiv.appendChild(refreshText);
+
+            latestEndTimes[key] = endUnix; // <--- Simpan untuk update live
           }
 
         for (const item of items) {
@@ -232,10 +236,24 @@
         container.appendChild(categoryDiv);
       }
     }
+    function updateTimers() {
+      const now = Math.floor(Date.now() / 1000);
+      for (const [key, endUnix] of Object.entries(latestEndTimes)) {
+        const remaining = Math.max(endUnix - now, 0);
+        const minutes = String(Math.floor(remaining / 60)).padStart(2, '0');
+        const seconds = String(remaining % 60).padStart(2, '0');
+
+        const el = document.getElementById(`timer-${key}`);
+        if (el) {
+          el.textContent = `⏱️ Next update in: ${minutes}:${seconds}`;
+        }
+      }
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       fetchData();
       setInterval(fetchData, 10000);
+      setInterval(updateTimers, 1000); // <--- Ini tambahan penting
     });
   </script>
 </body>
