@@ -4,58 +4,69 @@
   <meta charset="UTF-8">
   <title>Grow a Garden Overlay</title>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       font-family: sans-serif;
       background: transparent !important;
       color: #fff;
     }
+
     #overlay {
-      padding: 20px;
       display: flex;
       justify-content: center;
-    }
-    .wrapper {
-      background: rgba(20, 20, 20, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
+      align-items: center;
       padding: 20px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-      max-width: 800px;
-      width: 100%;
+      min-height: 100vh;
     }
+
+    .wrapper {
+      background: rgba(20, 20, 20, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+    }
+
     .category {
       padding: 10px 0;
     }
+
     .category h2 {
-      margin: 0;
-      font-size: 1.2em;
-      border-bottom: 1px solid #444;
+      margin: 0 0 6px;
+      font-size: 1.1em;
+      border-bottom: 1px solid #555;
       padding-bottom: 4px;
     }
+
     .item {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin: 6px 0;
+      margin: 4px 0;
     }
+
     .item img {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 4px;
     }
+
     .updated {
       background: limegreen;
       color: black;
       padding: 2px 4px;
       border-radius: 4px;
     }
+
     .separator {
       width: 100%;
-      height: auto;
-      margin: 10px 0;
-      opacity: 0.5;
+      height: 8px;
+      object-fit: contain;
+      margin: 8px 0;
+      opacity: 0.6;
     }
   </style>
 </head>
@@ -129,11 +140,10 @@
 
         wrapper.appendChild(categoryDiv);
 
-        // Tambahkan separator antar kategori kecuali yang terakhir
         if (index < entries.length - 1) {
           const separator = document.createElement("img");
           separator.className = "separator";
-          separator.src = "https://cdn.discordapp.com/attachments/1372911197837594725/1385243580074954752/gray_strip_transparent.png";
+          separator.src = "/strip.png"; // gunakan file lokal, upload ke public/
           wrapper.appendChild(separator);
         }
       });
